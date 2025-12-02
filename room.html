@@ -1,0 +1,15 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Watch room {{ room_id }}</title>
+</head>
+<body>
+  <h1>Watch room: {{ room_id }}</h1>
+  {% if link %}
+    <iframe width="640" height="360" src="{{ link | safe }}"></iframe>
+  {% else %}
+    <p>Комната не существует или неактивна.</p>
+  {% endif %}
+</body>
+</html>
