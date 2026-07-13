@@ -1,0 +1,24 @@
+:root{--motion:cubic-bezier(.22,1,.36,1)}
+body{overflow-x:hidden}
+.hero{position:relative!important;overflow:hidden!important;background:#10291c url('https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=2200&q=88') center/cover no-repeat!important}
+.hero-video{position:absolute;inset:-2%;width:104%;height:104%;object-fit:cover;object-position:center;z-index:0;opacity:0;transform:scale(1.02);transition:opacity 1s ease;pointer-events:none}
+.hero.video-ready .hero-video{opacity:1}
+.hero-video-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(12,34,25,.78),rgba(12,34,25,.28) 65%,rgba(12,34,25,.18)),linear-gradient(0deg,rgba(12,34,25,.76),rgba(12,34,25,.08) 65%,rgba(12,34,25,.24));pointer-events:none}
+.hero>.wrap{position:relative;z-index:2}
+.hero .eyebrow,.hero h1,.hero .lead,.hero .search{opacity:0;transform:translateY(26px)}
+body.site-ready .hero .eyebrow{animation:heroIn .75s .08s var(--motion) forwards}
+body.site-ready .hero h1{animation:heroIn .95s .18s var(--motion) forwards}
+body.site-ready .hero .lead{animation:heroIn .85s .32s var(--motion) forwards}
+body.site-ready .hero .search{animation:heroIn .95s .44s var(--motion) forwards}
+@keyframes heroIn{to{opacity:1;transform:none}}
+.nav{transition:top .3s var(--motion),height .3s var(--motion),box-shadow .3s ease,background .3s ease}
+.nav.video-scrolled{top:8px;height:58px;background:rgba(255,255,255,.97);box-shadow:0 16px 48px rgba(16,41,28,.18)}
+.btn{transition:transform .25s var(--motion),box-shadow .25s ease,filter .25s ease}
+.btn:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(16,41,28,.18);filter:brightness(1.03)}
+.card,.feature,.review,.g{transition:transform .45s var(--motion),box-shadow .45s ease}
+.card:hover,.feature:hover,.review:hover{transform:translateY(-7px);box-shadow:0 24px 60px rgba(25,49,40,.14)}
+.card .media img,.g img,.photo img{transition:transform .9s var(--motion)}
+.card:hover .media img,.g:hover img{transform:scale(1.06)}
+.scroll-reveal{opacity:0;transform:translateY(38px);transition:opacity .8s var(--motion),transform .8s var(--motion)}
+.scroll-reveal.visible{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.hero-video{display:none}.hero .eyebrow,.hero h1,.hero .lead,.hero .search,.scroll-reveal{opacity:1!important;transform:none!important;animation:none!important;transition:none!important}}
