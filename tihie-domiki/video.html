@@ -1,1 +1,89 @@
-<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>Тихие Домики — видеообложка</title><style>html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#10291c}iframe{display:block;width:100%;height:100dvh;border:0;background:#f4f1ea}.loader{position:fixed;inset:0;z-index:10;display:grid;place-items:center;background:#10291c;color:#
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Тихие Домики — видеообложка</title>
+  <style>
+    html,body{min-height:100%;margin:0;background:#f4f1ea;font-family:Arial,sans-serif}
+    .boot{position:fixed;inset:0;display:grid;place-items:center;background:#f4f1ea;color:#193128;text-align:center;z-index:9999}
+    .boot strong{display:block;font-size:20px;margin-bottom:12px}
+    .dots span{display:inline-block;width:9px;height:9px;margin:4px;border-radius:50%;background:#244a38;animation:jump .75s infinite alternate}
+    .dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
+    @keyframes jump{to{transform:translateY(-9px);background:#a5ca40}}
+  </style>
+</head>
+<body>
+  <div class="boot" id="boot"><div><strong>Загружаем домики…</strong><div class="dots"><span></span><span></span><span></span></div></div></div>
+  <script>
+  (()=>{
+    const extraCSS=`
+      :root{--motion:cubic-bezier(.22,1,.36,1)}
+      body{overflow-x:hidden}
+      .hero{position:relative!important;overflow:hidden!important;background:#10291c url('https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=2200&q=88') center/cover no-repeat!important}
+      .hero-video{position:absolute;inset:-2%;width:104%;height:104%;object-fit:cover;object-position:center;z-index:0;opacity:0;transform:scale(1.02);transition:opacity 1s ease;pointer-events:none}
+      .hero.video-ready .hero-video{opacity:1}
+      .hero-video-shade{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,rgba(12,34,25,.78),rgba(12,34,25,.28) 65%,rgba(12,34,25,.18)),linear-gradient(0deg,rgba(12,34,25,.76),rgba(12,34,25,.08) 65%,rgba(12,34,25,.24));pointer-events:none}
+      .hero>.wrap{position:relative;z-index:2}
+      .hero .eyebrow,.hero h1,.hero .lead,.hero .search{opacity:0;transform:translateY(26px)}
+      body.site-ready .hero .eyebrow{animation:heroIn .75s .08s var(--motion) forwards}
+      body.site-ready .hero h1{animation:heroIn .95s .18s var(--motion) forwards}
+      body.site-ready .hero .lead{animation:heroIn .85s .32s var(--motion) forwards}
+      body.site-ready .hero .search{animation:heroIn .95s .44s var(--motion) forwards}
+      @keyframes heroIn{to{opacity:1;transform:none}}
+      .nav{transition:top .3s var(--motion),height .3s var(--motion),box-shadow .3s ease,background .3s ease}
+      .nav.video-scrolled{top:8px;height:58px;background:rgba(255,255,255,.97);box-shadow:0 16px 48px rgba(16,41,28,.18)}
+      .btn{transition:transform .25s var(--motion),box-shadow .25s ease,filter .25s ease}
+      .btn:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(16,41,28,.18);filter:brightness(1.03)}
+      .card,.feature,.review,.g{transition:transform .45s var(--motion),box-shadow .45s ease}
+      .card:hover,.feature:hover,.review:hover{transform:translateY(-7px);box-shadow:0 24px 60px rgba(25,49,40,.14)}
+      .card .media img,.g img,.photo img{transition:transform .9s var(--motion)}
+      .card:hover .media img,.g:hover img{transform:scale(1.06)}
+      .scroll-reveal{opacity:0;transform:translateY(38px);transition:opacity .8s var(--motion),transform .8s var(--motion)}
+      .scroll-reveal.visible{opacity:1;transform:none}
+      @media(prefers-reduced-motion:reduce){.hero-video{display:none}.hero .eyebrow,.hero h1,.hero .lead,.hero .search,.scroll-reveal{opacity:1!important;transform:none!important;animation:none!important;transition:none!important}}
+    `;
+
+    const extraJS=`
+      (()=>{
+        const hero=document.querySelector('.hero');
+        const video=document.querySelector('.hero-video');
+        const nav=document.querySelector('.nav');
+        const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if(video){
+          const show=()=>hero&&hero.classList.add('video-ready');
+          const fallback=()=>{video.style.display='none';hero&&hero.classList.remove('video-ready')};
+          video.addEventListener('loadeddata',show,{once:true});
+          video.addEventListener('canplay',show,{once:true});
+          video.addEventListener('error',fallback,{once:true});
+          const play=video.play();if(play&&play.catch)play.catch(()=>{});
+          setTimeout(()=>{if(video.readyState<2)fallback()},9000);
+        }
+        requestAnimationFrame(()=>document.body.classList.add('site-ready'));
+        const targets=document.querySelectorAll('.section .head,.section .cards,.about,.darkbox,.gallery,.reviews,.faq,.cta');
+        if(reduce){targets.forEach(el=>el.classList.add('scroll-reveal','visible'))}
+        else{
+          targets.forEach(el=>el.classList.add('scroll-reveal'));
+          const io=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('visible');io.unobserve(entry.target)}}),{threshold:.12,rootMargin:'0px 0px -45px'});
+          targets.forEach(el=>io.observe(el));
+        }
+        const onScroll=()=>nav&&nav.classList.toggle('video-scrolled',window.scrollY>45);
+        addEventListener('scroll',onScroll,{passive:true});onScroll();
+      })();
+    `;
+
+    fetch('./index.html',{cache:'no-store'})
+      .then(response=>{if(!response.ok)throw new Error('Не удалось загрузить страницу');return response.text()})
+      .then(html=>{
+        html=html.replace('</style>',extraCSS+'</style>');
+        html=html.replace('<section class="hero"><div class="wrap">','<section class="hero"><video class="hero-video" autoplay muted loop playsinline preload="auto" poster="https://images.unsplash.com/photo-1510798831971-661eb04b3739?auto=format&fit=crop&w=2200&q=88" aria-hidden="true"><source src="https://cdn.pixabay.com/video/2021/12/07/99973-658725823_medium.mp4" type="video/mp4"></video><div class="hero-video-shade"></div><div class="wrap">');
+        html=html.replace('</body>','<script>'+extraJS.replace(/<\\/script>/g,'<\\/script>')+'<\\/script></body>');
+        document.open();document.write(html);document.close();
+      })
+      .catch(error=>{
+        document.getElementById('boot').innerHTML='<div><strong>Не удалось открыть сайт</strong><div>'+error.message+'</div><p><a href="./index.html" style="color:#244a38;font-weight:700">Открыть версию без видео</a></p></div>';
+      });
+  })();
+  </script>
+</body>
+</html>
